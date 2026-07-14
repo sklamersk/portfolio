@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Josea Mari Gacutno — Computer Engineer | AI &amp; Automation</title>
+<meta name="description" content="Portfolio of Josea Mari Gacutno — Computer Engineering graduate (UP Diliman) specializing in embedded systems, AI/software development, and workflow automation." />
+
+<!-- ============================================================
+  OFFLINE NOTE FOR SEA:
+  This file uses two CDN resources so it can preview instantly:
+  1) Tailwind CDN (script below)
+  2) Google Fonts (Space Grotesk + Inter)
+  These two need an internet connection. Everything else — layout,
+  colors, animations, and the three project images in
+  assets/images/ — is self-contained and works fully offline once
+  those two load (and once assets/images/ ships alongside this file).
+  For a "real" offline copy, or for free permanent online hosting,
+  see the notes at the very end of my chat reply.
+=============================================================== -->
+
+<!-- Google Fonts: Space Grotesk (headings) + Inter (body) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Tailwind CDN -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          navy: {
+            DEFAULT: '#0a1220',
+            deep: '#060d17',
+          },
+          forest: {
+            DEFAULT: '#08140f',
+          },
+          dandelion: {
+            DEFAULT: '#f4c93a',
+            soft: '#ffe27a',
+            dim: '#8a6f1e',
+          },
+          slateglow: '#c9d3e0',
+        },
+        fontFamily: {
+          display: ['"Space Grotesk"', 'sans-serif'],
+          sans: ['Inter', 'sans-serif'],
+          mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+        },
+        boxShadow: {
+          'glow-yellow': '0 0 0 1px rgba(244,201,58,0.35), 0 8px 30px -8px rgba(244,201,58,0.25)',
+        },
+      },
+    },
+  };
+</script>
+
+<style>
+  :root{
+    --navy:#0a1220;
+    --navy-deep:#060d17;
+    --forest:#0a1a13;
+    --dandelion:#f4c93a;
+  }
+  html{ background:var(--navy-deep); }
+  body{
+    background:
+      radial-gradient(1100px 600px at 85% -10%, rgba(244,201,58,0.06), transparent 60%),
+      linear-gradient(155deg, var(--navy-deep) 0%, var(--navy) 42%, #0d1c17 70%, var(--forest) 100%);
+    background-attachment: fixed;
+  }
+
+  /* Faint PCB / circuit-trace texture — nods to the embedded-systems background
+     without shouting about it. Two thin layers: dot "vias" + hairline traces.
+     No mask/fade here on purpose — a masked background was previously fading
+     real content (text, cards, buttons) near the edges of these sections. */
+  .circuit-bg{
+    background-image:
+      radial-gradient(rgba(201,211,224,0.10) 1px, transparent 1px),
+      linear-gradient(rgba(201,211,224,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,211,224,0.05) 1px, transparent 1px);
+    background-size: 28px 28px, 56px 56px, 56px 56px;
+    background-position: 0 0, 0 0, 0 0;
+  }
+
+  ::selection{ background: var(--dandelion); color:#0a1220; }
+
+  ::-webkit-scrollbar{ width:10px; }
+  ::-webkit-scrollbar-track{ background: var(--navy-deep); }
+  ::-webkit-scrollbar-thumb{ background:#1c2c40; border-radius:8px; }
+  ::-webkit-scrollbar-thumb:hover{ background:#2a3f5a; }
+
+  a, button{ transition: all .2s ease; }
+
+  /* Visible keyboard focus ring everywhere (accessibility floor) */
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{
+    outline: 2px solid var(--dandelion);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  .nav-link{ position:relative; }
+  .nav-link::after{
+    content:'';
+    position:absolute; left:0; bottom:-4px;
+    width:0%; height:2px; background:var(--dandelion);
+    transition: width .25s ease;
+  }
+  .nav-link:hover::after, .nav-link.active::after{ width:100%; }
+  .nav-link.active{ color: var(--dandelion); }
+
+  /* Corner-bracket "schematic label" motif used on cards — small IC-pin ticks */
+  .chip-card{ position:relative; }
+  .chip-card::before, .chip-card::after{
+    content:'';
+    position:absolute; width:10px; height:10px;
+    border-color: rgba(244,201,58,0.55);
+    opacity:0; transition:opacity .25s ease;
+  }
+  .chip-card::before{ top:-1px; left:-1px; border-top:2px solid; border-left:2px solid; }
+  .chip-card::after{ bottom:-1px; right:-1px; border-bottom:2px solid; border-right:2px solid; }
+  .chip-card:hover::before, .chip-card:hover::after{ opacity:1; }
+
+  .reveal{ opacity:0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.in{ opacity:1; transform:none; }
+
+  @media (prefers-reduced-motion: reduce){
+    .reveal{ opacity:1; transform:none; transition:none; }
+    html{ scroll-behavior:auto; }
+  }
+
+  .project-thumb-wrap{ overflow:hidden; }
+  .project-thumb-wrap img{ transition: transform .5s ease; }
+  .project-thumb-wrap:hover img{ transform: scale(1.08); }
+
+  .thumb-overlay{
+    opacity:0; transition: opacity .3s ease;
+    background: linear-gradient(0deg, rgba(6,13,23,0.92) 0%, rgba(6,13,23,0.35) 55%, transparent 100%);
+  }
+  .project-thumb-wrap:hover .thumb-overlay{ opacity:1; }
+
+  /* Blinking cursor for the hero "terminal" eyebrow */
+  .caret{ display:inline-block; width:2px; background:var(--dandelion); margin-left:2px; animation: blink 1s step-end infinite; }
+  @keyframes blink{ 50%{ opacity:0; } }
+</style>
+</head>
+
+<body class="font-sans text-slateglow antialiased selection:bg-dandelion selection:text-navy">
+
+<!-- ============================= NAV ============================= -->
+<header id="top" class="fixed top-0 inset-x-0 z-50 bg-navy-deep border-b border-white/5">
+  <nav class="max-w-6xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between">
+    <a href="#top" class="font-display font-semibold text-lg text-white tracking-tight">
+      Sea<span class="text-dandelion">.</span>dev
+    </a>
+
+    <!-- Desktop links -->
+    <ul class="hidden md:flex items-center gap-8 text-sm font-medium text-slateglow/90">
+      <li><a href="#top" class="nav-link active">Home</a></li>
+      <li><a href="#about" class="nav-link">About</a></li>
+      <li><a href="#skills" class="nav-link">Skills</a></li>
+      <li><a href="#tools" class="nav-link">Tools</a></li>
+      <li><a href="#work" class="nav-link">My Work</a></li>
+      <li><a href="#contact" class="nav-link">Contact</a></li>
+    </ul>
+
+    <a href="#contact"
+       class="hidden md:inline-flex items-center gap-1.5 rounded-full bg-dandelion text-navy-deep font-semibold text-sm px-5 py-2 hover:bg-dandelion-soft hover:shadow-glow-yellow">
+      Let's Talk
+    </a>
+
+    <!-- Mobile toggle -->
+    <button id="menuBtn" aria-label="Open menu" aria-expanded="false" class="md:hidden text-white p-2 -mr-2">
+      <svg id="menuIconOpen" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" /></svg>
+      <svg id="menuIconClose" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+    </button>
+  </nav>
+
+  <!-- Mobile menu panel -->
+  <div id="mobileMenu" class="md:hidden hidden border-t border-white/5 bg-navy-deep/95">
+    <ul class="flex flex-col px-5 py-4 gap-1 text-sm font-medium">
+      <li><a href="#top" class="mobile-link block py-2.5">Home</a></li>
+      <li><a href="#about" class="mobile-link block py-2.5">About</a></li>
+      <li><a href="#skills" class="mobile-link block py-2.5">Skills</a></li>
+      <li><a href="#tools" class="mobile-link block py-2.5">Tools</a></li>
+      <li><a href="#work" class="mobile-link block py-2.5">My Work</a></li>
+      <li><a href="#contact" class="mobile-link block py-2.5 text-dandelion">Contact</a></li>
+    </ul>
+  </div>
+</header>
+
+<!-- ============================= HERO ============================= -->
+<section class="relative pt-32 pb-20 sm:pt-40 sm:pb-24 circuit-bg">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 w-full grid lg:grid-cols-[1.15fr_0.85fr] gap-12 items-center">
+
+    <div>
+      <p class="font-mono text-sm text-dandelion/90 mb-4">
+        <span class="text-slateglow/50">&gt;</span> whoami<span class="caret">&nbsp;</span>
+      </p>
+
+      <p class="text-lg sm:text-xl text-slateglow/80 mb-2">Hello! My name is</p>
+
+      <h1 class="font-display font-bold leading-[1.05] text-4xl sm:text-5xl lg:text-6xl text-white">
+        Josea Mari <span class="text-dandelion">Gacutno</span>
+      </h1>
+
+      <p class="mt-5 text-base sm:text-lg text-slateglow/85 max-w-xl">
+        Computer Engineering Graduate &amp; AI and Automation Enthusiast
+      </p>
+
+      <p class="mt-3 text-sm sm:text-base text-slateglow/60 max-w-xl">
+        UP Diliman '26 · Building at the intersection of embedded hardware, applied AI,
+        and no-code workflow automation.
+      </p>
+
+      <div class="mt-9 flex flex-wrap items-center gap-4">
+        <!-- TODO: point this at your real resume file, e.g. assets/Gacutno_Resume.pdf -->
+        <a href="assets/resume.pdf" download
+           class="inline-flex items-center gap-2 rounded-full bg-dandelion text-navy-deep font-semibold px-6 py-3 hover:bg-dandelion-soft hover:shadow-glow-yellow hover:-translate-y-0.5">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
+          Download Resume
+        </a>
+        <a href="#contact"
+           class="inline-flex items-center gap-2 rounded-full border border-dandelion/60 text-dandelion font-semibold px-6 py-3 hover:bg-dandelion/10 hover:-translate-y-0.5">
+          Let's Talk
+        </a>
+      </div>
+
+      <div class="mt-10 flex items-center gap-5 text-slateglow/60">
+        <!-- TODO: replace # with your real profile links -->
+        <a href="#" aria-label="GitHub" class="hover:text-dandelion"><svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .5C5.73.5.5 5.73.5 12a11.5 11.5 0 007.87 10.94c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.54-3.88-1.54-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.17.08 1.78 1.2 1.78 1.2 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.26-1.28-5.26-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.04 0 0 .97-.31 3.18 1.18a11 11 0 015.79 0c2.2-1.49 3.17-1.18 3.17-1.18.64 1.58.24 2.75.12 3.04.74.81 1.18 1.84 1.18 3.1 0 4.43-2.7 5.4-5.28 5.69.42.36.78 1.08.78 2.17v3.22c0 .31.21.67.8.56A11.5 11.5 0 0023.5 12C23.5 5.73 18.27.5 12 .5z"/></svg></a>
+        <a href="#" aria-label="LinkedIn" class="hover:text-dandelion"><svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.07 2.07 0 110-4.14 2.07 2.07 0 010 4.14zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.75v20.5C0 23.22.8 24 1.78 24h20.44c.98 0 1.78-.78 1.78-1.75V1.75C24 .78 23.2 0 22.22 0z"/></svg></a>
+        <a href="mailto:sea@example.com" aria-label="Email" class="hover:text-dandelion"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l9 6 9-6M3 6h18v12H3V6z"/></svg></a>
+      </div>
+    </div>
+
+    <!-- Decorative "schematic card" — signature element grounded in CoE subject matter -->
+    <div class="hidden lg:block reveal">
+      <div class="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6 chip-card">
+        <p class="font-mono text-xs text-slateglow/50 mb-4">// current_status.py</p>
+        <pre class="font-mono text-[13px] leading-relaxed text-slateglow/80"><code><span class="text-dandelion">status</span> = {
+  <span class="text-dandelion/80">"role"</span>: <span class="text-slateglow/70">"open to work"</span>,
+  <span class="text-dandelion/80">"focus"</span>: [
+    <span class="text-slateglow/70">"AI engineering"</span>,
+    <span class="text-slateglow/70">"automation"</span>,
+    <span class="text-slateglow/70">"QA"</span>,
+  ],
+  <span class="text-dandelion/80">"starting"</span>: <span class="text-slateglow/70">"Aug 2026"</span>,
+  <span class="text-dandelion/80">"school"</span>: <span class="text-slateglow/70">"UP Diliman"</span>,
+}</code></pre>
+        <div class="mt-5 pt-5 border-t border-white/10 flex items-center justify-between text-xs font-mono text-slateglow/50">
+          <span>Pasig City, PH</span>
+          <span class="inline-flex items-center gap-1.5 text-dandelion/90">
+            <span class="h-1.5 w-1.5 rounded-full bg-dandelion animate-pulse"></span> available
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= ABOUT ============================= -->
+<section id="about" class="py-24 sm:py-28 circuit-bg">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8">
+    <p class="font-mono text-xs tracking-widest text-dandelion/80 uppercase mb-3 reveal">01 — About</p>
+    <h2 class="font-display font-semibold text-3xl sm:text-4xl text-white mb-12 reveal">Get to know me</h2>
+
+    <div class="grid lg:grid-cols-[1fr_0.9fr] gap-12 items-start">
+      <div class="reveal">
+        <!-- TODO: swap in your own About Me paragraph if you'd like to tweak the wording -->
+        <p class="text-slateglow/85 leading-relaxed text-base sm:text-lg">
+          I'm a Computer Engineering graduate from the University of the Philippines – Diliman,
+          with a background that spans both sides of the stack: embedded systems and
+          hardware-software integration on one end, and applied AI / software development on
+          the other. My thesis and coursework had me working with microcontrollers, FPGAs, and
+          sensor pipelines, while my more recent projects have pulled me toward Python-based AI
+          tooling and end-to-end system integration.
+        </p>
+        <p class="mt-4 text-slateglow/85 leading-relaxed text-base sm:text-lg">
+          Lately, my focus has shifted toward <span class="text-dandelion">no-code and
+          low-code workflow automation</span> — using tools like Zapier, Make, and Playwright
+          to remove repetitive manual work from real operations. I like projects that sit at the
+          intersection of "this should just run itself" and "this needs to actually be
+          engineered correctly."
+        </p>
+        <p class="mt-4 text-slateglow/85 leading-relaxed text-base sm:text-lg">
+          I'm currently <span class="text-dandelion">actively looking for full-time
+          opportunities</span> in AI engineering, data engineering, QA/automation, or software
+          engineering — and I'm always happy to talk shop about a role, a project, or both.
+        </p>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-1 gap-5 reveal">
+        <div class="chip-card rounded-2xl border border-white/10 bg-white/[0.03] p-6 hover:border-dandelion/40">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="h-10 w-10 rounded-xl bg-dandelion/10 flex items-center justify-center text-dandelion">
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.42A12.02 12.02 0 0121 12c0 4-4 7-9 9-5-2-9-5-9-9 0-.98.2-1.92.55-2.78L12 14z"/></svg>
+            </span>
+            <h3 class="font-display font-semibold text-white text-lg">Education</h3>
+          </div>
+          <p class="text-white font-medium">BS Computer Engineering</p>
+          <p class="text-slateglow/70 text-sm mt-1">University of the Philippines – Diliman</p>
+          <p class="text-slateglow/50 text-sm mt-1 font-mono">Sept 2022 – July 2026</p>
+        </div>
+
+        <div class="chip-card rounded-2xl border border-white/10 bg-white/[0.03] p-6 hover:border-dandelion/40">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="h-10 w-10 rounded-xl bg-dandelion/10 flex items-center justify-center text-dandelion">
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </span>
+            <h3 class="font-display font-semibold text-white text-lg">Certifications</h3>
+          </div>
+          <p class="text-white font-medium">Building Intermediate Zaps</p>
+          <p class="text-slateglow/70 text-sm mt-1">Zapier Academy</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= SKILLS ============================= -->
+<section id="skills" class="py-24 sm:py-28">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8">
+    <p class="font-mono text-xs tracking-widest text-dandelion/80 uppercase mb-3 reveal">02 — Core Skills</p>
+    <h2 class="font-display font-semibold text-3xl sm:text-4xl text-white mb-12 reveal">What I bring to the table</h2>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <div class="chip-card reveal rounded-2xl bg-gradient-to-b from-white/[0.04] to-white/[0.015] border border-white/10 p-6 hover:border-dandelion/40 hover:-translate-y-1">
+        <span class="inline-flex h-11 w-11 rounded-xl bg-dandelion/10 items-center justify-center text-dandelion mb-4">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="7" y="7" width="10" height="10" rx="1"/><path stroke-linecap="round" d="M9 3v2M15 3v2M9 19v2M15 19v2M3 9h2M3 15h2M19 9h2M19 15h2"/></svg>
+        </span>
+        <h3 class="font-display font-semibold text-white text-lg mb-2">Embedded Systems &amp; Hardware</h3>
+        <p class="text-slateglow/70 text-sm leading-relaxed">Microcontrollers, FPGA platforms (Xilinx Arty A7) with Verilog, and sensor integration.</p>
+      </div>
+
+      <div class="chip-card reveal rounded-2xl bg-gradient-to-b from-white/[0.04] to-white/[0.015] border border-white/10 p-6 hover:border-dandelion/40 hover:-translate-y-1">
+        <span class="inline-flex h-11 w-11 rounded-xl bg-dandelion/10 items-center justify-center text-dandelion mb-4">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16M6 8l-4 4 4 4M18 8l4 4-4 4"/></svg>
+        </span>
+        <h3 class="font-display font-semibold text-white text-lg mb-2">Software &amp; AI Development</h3>
+        <p class="text-slateglow/70 text-sm leading-relaxed">Python, REST APIs, and automated grading platforms.</p>
+      </div>
+
+      <div class="chip-card reveal rounded-2xl bg-gradient-to-b from-white/[0.04] to-white/[0.015] border border-white/10 p-6 hover:border-dandelion/40 hover:-translate-y-1">
+        <span class="inline-flex h-11 w-11 rounded-xl bg-dandelion/10 items-center justify-center text-dandelion mb-4">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </span>
+        <h3 class="font-display font-semibold text-white text-lg mb-2">Testing &amp; QA</h3>
+        <p class="text-slateglow/70 text-sm leading-relaxed">Regression testing, system debugging, and data validation with Playwright and Selenium.</p>
+      </div>
+
+      <div class="chip-card reveal rounded-2xl bg-gradient-to-b from-white/[0.04] to-white/[0.015] border border-white/10 p-6 hover:border-dandelion/40 hover:-translate-y-1 sm:col-span-2 lg:col-span-1">
+        <span class="inline-flex h-11 w-11 rounded-xl bg-dandelion/10 items-center justify-center text-dandelion mb-4">
+          <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        </span>
+        <h3 class="font-display font-semibold text-white text-lg mb-2">Workflow Automation</h3>
+        <p class="text-slateglow/70 text-sm leading-relaxed">Building scalable workflows using Zapier, Make, Python, and Playwright.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================= TOOLS ============================= -->
+<section id="tools" class="py-24 sm:py-28 circuit-bg">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8">
+    <p class="font-mono text-xs tracking-widest text-dandelion/80 uppercase mb-3 reveal">03 — Tools &amp; Platforms</p>
+    <h2 class="font-display font-semibold text-3xl sm:text-4xl text-white mb-12 reveal">What I build with</h2>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+      <!-- Text-mark badges instead of trademarked logo art — swap the <span> for an <img> if you'd rather use real logo SVGs (e.g. from simpleicons.org) -->
+      <div class="reveal chip-card rounded-2xl border border-white/10 bg-white/[0.03] p-5 flex flex-col items-center justify-center gap-2 hover:border-dandelion/50 hover:bg-white/[0.06]">
+        <span class="font-display font-bold text-xl text-dandelion">Py</span>
+        <span class="text-xs text-slateglow/60">Python</span>
+      </div>
+      <div class="reveal chip-card rounded-2xl border border-white/10 bg-white/[0.03] p-5 flex flex-col items-center justify-center gap-2 hover:border-dandelion/50 hover:bg-white/[0.06]">
+        <span class="font-display font-bold text-xl text-dandelion">C</span>
+        <span class="text-xs text-slateglow/60">C</span>
+      </div>
+      <div class="reveal chip-card rounded-2xl border border-white/10 bg-white/[0.03] p-5 flex flex-col items-center justify-center gap-2 hover:border-dandelion/50 hover:bg-white/[0.06]">
+        <span class="font-display font-bold text-xl text-dandelion">V</span>
+        <span class="text-xs text-slateglow/60">Verilog</span>
+      </div>
+      <div class="reveal chip-card rounded-2xl border border-white/10 bg-white/[0.03] p-5 flex flex-col items-center justify-center gap-2 hover:border-dandelion/50 hover:bg-white/[0.06]">
+        <span class="font-display font-bold text-xl text-dandelion">Zp</span>
+        <span class="text-xs text-slateglow/60">Zapier</span>
+      </div>
+      <div class="reveal chip-card rounded-2xl border border-white/10 bg-white/[0.03] p-5 flex flex-col items-center justify-center gap-2 hover:border-dandelion/50 hover:bg-white/[0.06]">
+        <span class="font-display font-bold text-xl text-dandelion">Mk</span>
+        <span class="text-xs text-slateglow/60">Make</span>
+      </div>
+      <div class="reveal chip-card rounded-2xl border border-white/10 bg-white/[0.03] p-5 flex flex-col items-center justify-center gap-2 hover:border-dandelion/50 hover:bg-white/[0.06]">
+        <span class="font-display font-bold text-xl text-dandelion">Mx</span>
+        <span class="text-xs text-slateglow/60">MATLAB</span>
+      </div>
+      <div class="reveal chip-card rounded-2xl border border-white/10 bg-white/[0.03] p-5 flex flex-col items-center justify-center gap-2 hover:border-dandelion/50 hover:bg-white/[0.06]">
+        <span class="font-display font-bold text-xl text-dandelion">Git</span>
+        <span class="text-xs text-slateglow/60">Git</span>
+      </div>
+      <div class="reveal chip-card rounded-2xl border border-white/10 bg-white/[0.03] p-5 flex flex-col items-center justify-center gap-2 hover:border-dandelion/50 hover:bg-white/[0.06]">
+        <span class="font-display font-bold text-xl text-dandelion">Pw</span>
+        <span class="text-xs text-slateglow/60">Playwright</span>
+      </div>
+      <div class="reveal chip-card rounded-2xl border border-white/10 bg-white/[0.03] p-5 flex flex-col items-center justify-center gap-2 hover:border-dandelion/50 hover:bg-white/[0.06]">
+        <span class="font-display font-bold text-xl text-dandelion">Se</span>
+        <span class="text-xs text-slateglow/60">Selenium</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= MY WORK ============================= -->
+<section id="work" class="py-24 sm:py-28">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8">
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-12">
+      <div class="reveal">
+        <p class="font-mono text-xs tracking-widest text-dandelion/80 uppercase mb-3">04 — My Work</p>
+        <h2 class="font-display font-semibold text-3xl sm:text-4xl text-white">Flagship projects</h2>
+      </div>
+      <!-- TODO: point this at your real PDF, e.g. assets/Project_Descriptions.pdf -->
+      <a href="assets/project-descriptions.pdf" download
+         class="reveal inline-flex items-center gap-2 rounded-full bg-dandelion text-navy-deep font-semibold px-6 py-3 hover:bg-dandelion-soft hover:shadow-glow-yellow self-start sm:self-auto whitespace-nowrap">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
+        Download Detailed Project Descriptions
+      </a>
+    </div>
+
+    <!-- Grid: 3 flagship projects -->
+    <div id="projectGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-7">
+
+      <!-- Project 1: PaTsek -->
+      <article class="project-card reveal chip-card rounded-2xl overflow-hidden border border-white/10 bg-white/[0.03] hover:border-dandelion/40 flex flex-col">
+        <div class="project-thumb-wrap relative h-48">
+          <!-- Local project image: assets/images/patsek.png -->
+          <img src="assets/images/patsek.png" alt="PaTsek logo — a checkmark inside a bracket, with the wordmark PaTsek" class="w-full h-full object-contain bg-white p-6" loading="lazy" />
+          <div class="thumb-overlay absolute inset-0 flex items-end p-4">
+            <span class="text-xs font-mono text-dandelion">Top 18 Semi-Finalist · UPEEEAAI Medal</span>
+          </div>
+        </div>
+        <div class="p-6 flex flex-col flex-1">
+          <h3 class="font-display font-semibold text-white text-lg mb-2">PaTsek</h3>
+          <p class="text-slateglow/70 text-sm leading-relaxed flex-1">
+            Multimodal automated grading platform (Top 18 Semi-Finalist — UPEEEAAI Medal).
+            Owned end-to-end system integration, tying computer vision output into a working
+            grading pipeline.
+          </p>
+          <div class="flex flex-wrap gap-2 mt-4 mb-5">
+            <span class="text-xs font-mono px-2.5 py-1 rounded-full bg-dandelion/10 text-dandelion/90">YOLO</span>
+            <span class="text-xs font-mono px-2.5 py-1 rounded-full bg-dandelion/10 text-dandelion/90">Python</span>
+            <span class="text-xs font-mono px-2.5 py-1 rounded-full bg-dandelion/10 text-dandelion/90">System Integration</span>
+          </div>
+          <!-- TODO: link to repo / demo / case study -->
+          <a href="#" class="inline-flex items-center gap-1.5 text-sm font-semibold text-dandelion hover:text-dandelion-soft">
+            View project
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- Project 2: CanSat -->
+      <article class="project-card reveal chip-card rounded-2xl overflow-hidden border border-white/10 bg-white/[0.03] hover:border-dandelion/40 flex flex-col">
+        <div class="project-thumb-wrap relative h-48">
+          <!-- Local project image: assets/images/cansat.png -->
+          <img src="assets/images/cansat.png" alt="Assembled CanSat prototype hardware with antenna, mounted in a 3D-printed frame" class="w-full h-full object-cover" loading="lazy" />
+          <div class="thumb-overlay absolute inset-0 flex items-end p-4">
+            <span class="text-xs font-mono text-dandelion">Embedded systems build</span>
+          </div>
+        </div>
+        <div class="p-6 flex flex-col flex-1">
+          <h3 class="font-display font-semibold text-white text-lg mb-2">CanSat</h3>
+          <p class="text-slateglow/70 text-sm leading-relaxed flex-1">
+            PIC32CM-based satellite prototype with GPS parsing and wireless telemetry, built
+            and tested as a compact embedded payload system.
+          </p>
+          <div class="flex flex-wrap gap-2 mt-4 mb-5">
+            <span class="text-xs font-mono px-2.5 py-1 rounded-full bg-dandelion/10 text-dandelion/90">PIC32CM</span>
+            <span class="text-xs font-mono px-2.5 py-1 rounded-full bg-dandelion/10 text-dandelion/90">GPS Parsing</span>
+            <span class="text-xs font-mono px-2.5 py-1 rounded-full bg-dandelion/10 text-dandelion/90">Wireless Telemetry</span>
+          </div>
+          <a href="#" class="inline-flex items-center gap-1.5 text-sm font-semibold text-dandelion hover:text-dandelion-soft">
+            View project
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- Project 3: RAG Q&A Service -->
+      <article class="project-card reveal chip-card rounded-2xl overflow-hidden border border-white/10 bg-white/[0.03] hover:border-dandelion/40 flex flex-col">
+        <div class="project-thumb-wrap relative h-48">
+          <!-- Local project image: assets/images/rag-qa-service.png -->
+          <img src="assets/images/rag-qa-service.png" alt="RAG Q&A Service web interface showing index stats, pipeline steps, and a chat panel" class="w-full h-full object-cover object-top" loading="lazy" />
+          <div class="thumb-overlay absolute inset-0 flex items-end p-4">
+            <span class="text-xs font-mono text-dandelion">LLM-as-judge eval pipeline</span>
+          </div>
+        </div>
+        <div class="p-6 flex flex-col flex-1">
+          <h3 class="font-display font-semibold text-white text-lg mb-2">RAG Q&amp;A Service</h3>
+          <p class="text-slateglow/70 text-sm leading-relaxed flex-1">
+            Backend pipeline with FastAPI, LangChain, ChromaDB, and Ollama, with an
+            LLM-as-judge evaluation loop for answer quality.
+          </p>
+          <div class="flex flex-wrap gap-2 mt-4 mb-5">
+            <span class="text-xs font-mono px-2.5 py-1 rounded-full bg-dandelion/10 text-dandelion/90">FastAPI</span>
+            <span class="text-xs font-mono px-2.5 py-1 rounded-full bg-dandelion/10 text-dandelion/90">LangChain</span>
+            <span class="text-xs font-mono px-2.5 py-1 rounded-full bg-dandelion/10 text-dandelion/90">ChromaDB</span>
+            <span class="text-xs font-mono px-2.5 py-1 rounded-full bg-dandelion/10 text-dandelion/90">Ollama</span>
+          </div>
+          <a href="#" class="inline-flex items-center gap-1.5 text-sm font-semibold text-dandelion hover:text-dandelion-soft">
+            View project
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+          </a>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Additional Highlights banner -->
+    <div class="reveal mt-10 rounded-2xl border border-white/10 bg-white/[0.03] px-6 py-6 sm:px-8 sm:py-7">
+      <p class="font-mono text-xs tracking-widest text-dandelion/80 uppercase mb-4">Other Key Engineering Experience</p>
+      <ul class="grid sm:grid-cols-3 gap-x-8 gap-y-3 text-sm text-slateglow/80">
+        <li class="flex gap-2.5">
+          <span class="text-dandelion mt-0.5">▸</span>
+          <span>Hardware-software interface design on Xilinx Arty A7 FPGAs using Verilog</span>
+        </li>
+        <li class="flex gap-2.5">
+          <span class="text-dandelion mt-0.5">▸</span>
+          <span>Multi-platform automated data collection using Python, Playwright, and Selenium</span>
+        </li>
+        <li class="flex gap-2.5">
+          <span class="text-dandelion mt-0.5">▸</span>
+          <span>QA testing &amp; defect tracking workflows</span>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================= CONTACT ============================= -->
+<section id="contact" class="py-24 sm:py-28 circuit-bg">
+  <div class="max-w-4xl mx-auto px-5 sm:px-8 text-center">
+    <p class="font-mono text-xs tracking-widest text-dandelion/80 uppercase mb-3 reveal">05 — Contact</p>
+    <h2 class="font-display font-semibold text-3xl sm:text-4xl text-white mb-4 reveal">Let's build something</h2>
+    <p class="reveal text-slateglow/70 max-w-xl mx-auto mb-10">
+      I'm actively interviewing and open to full-time roles in AI engineering, data
+      engineering, QA, and automation. If there's a fit, I'd love to hear from you.
+    </p>
+
+    <div class="reveal flex flex-col sm:flex-row items-center justify-center gap-4">
+      <!-- TODO: replace with your real email -->
+      <a href="mailto:sea@example.com"
+         class="inline-flex items-center gap-2 rounded-full bg-dandelion text-navy-deep font-semibold px-7 py-3.5 hover:bg-dandelion-soft hover:shadow-glow-yellow">
+        <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l9 6 9-6M3 6h18v12H3V6z"/></svg>
+        sea@example.com
+      </a>
+      <a href="#"
+         class="inline-flex items-center gap-2 rounded-full border border-dandelion/60 text-dandelion font-semibold px-7 py-3.5 hover:bg-dandelion/10">
+        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47v6.27zM5.34 7.43a2.07 2.07 0 110-4.14 2.07 2.07 0 010 4.14zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.78C.8 0 0 .78 0 1.75v20.5C0 23.22.8 24 1.78 24h20.44c.98 0 1.78-.78 1.78-1.75V1.75C24 .78 23.2 0 22.22 0z"/></svg>
+        Connect on LinkedIn
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================= FOOTER ============================= -->
+<footer class="border-t border-white/5 py-8">
+  <div class="max-w-6xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slateglow/40">
+    <p>&copy; <span id="year"></span> Josea Mari Gacutno. Built with Tailwind CSS.</p>
+    <a href="#top" class="hover:text-dandelion">Back to top ↑</a>
+  </div>
+</footer>
+
+<script>
+  // Footer year
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // Mobile menu toggle
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const iconOpen = document.getElementById('menuIconOpen');
+  const iconClose = document.getElementById('menuIconClose');
+
+  menuBtn.addEventListener('click', () => {
+    const isOpen = !mobileMenu.classList.contains('hidden');
+    mobileMenu.classList.toggle('hidden');
+    iconOpen.classList.toggle('hidden');
+    iconClose.classList.toggle('hidden');
+    menuBtn.setAttribute('aria-expanded', String(!isOpen));
+  });
+
+  document.querySelectorAll('.mobile-link').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+      iconOpen.classList.remove('hidden');
+      iconClose.classList.add('hidden');
+      menuBtn.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Active nav link highlighting on scroll
+  const sections = document.querySelectorAll('section[id], header[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const highlightNav = () => {
+    let currentId = 'top';
+    const scrollPos = window.scrollY + 120;
+    sections.forEach(sec => {
+      if (scrollPos >= sec.offsetTop) currentId = sec.id;
+    });
+    navLinks.forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === '#' + currentId);
+    });
+  };
+  window.addEventListener('scroll', highlightNav, { passive: true });
+  highlightNav();
+
+  // Scroll-reveal animation (respects prefers-reduced-motion via CSS above)
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  revealEls.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
